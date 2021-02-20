@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -20,6 +21,7 @@ use frontend\models\ContactForm;
  */
 class SiteController extends Controller
 {
+    public $layout = '@frontend/views/layouts-login/main';
     /**
      * {@inheritdoc}
      */
@@ -90,6 +92,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if(Yii::$app->user->can('client')){
+                return $this->redirect(['parcel/index']);
+            }
+
             return $this->goBack();
         } else {
             $model->password = '';
@@ -154,8 +160,13 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
+            // Set role client
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole('client');
+            $auth->assign($role,Yii::$app->user->getId());
+            Yii::$app->session->setFlash('success', 'Thank you for registration.');
+
+            return $this->redirect(['parcel/index']);
         }
 
         return $this->render('signup', [

@@ -1,5 +1,6 @@
 <?php
 return [
+    'name' => 'Meest IT Task',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

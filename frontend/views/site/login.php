@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\widgets\MaskedInput;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
@@ -19,7 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'email')->widget(MaskedInput::className(),[
+                    'clientOptions' => [
+                        'alias' =>  'email'
+                    ],
+                ]) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
