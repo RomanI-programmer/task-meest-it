@@ -37,9 +37,10 @@ $this->beginBody() ?>
             //'bgImage' => '@web/img/sidebar-5.jpg', //Don't define it if there is none
             'header' => [
                 'title' => 'Meest IT',
-                'url' => ['/default/index']
+                'url' => ['/dashboard/index']
             ],
             'links' => [
+                ['title' => 'Dashboard', 'url' => ['/dashboard/index'], 'icon' => 'graph'],
                 ['title' => 'Users', 'url' => ['/management-user/index'], 'icon' => 'users'],
                 ['title' => 'Parcel', 'url' => ['/parcel/index'], 'icon' => 'box1'],
                 ['title' => 'Categories', 'url' => ['/category/index'], 'icon' => 'menu'],

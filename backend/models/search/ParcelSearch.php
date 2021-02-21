@@ -19,7 +19,8 @@ class ParcelSearch extends Parcel
         return [
             [['id', 'category_id', 'user_id'], 'integer'],
             [['created_at', 'updated_at', 'status', 'recipient_id',], 'safe'],
-            [['weight', 'size', 'price'], 'number'],
+            [['size'],'string'],
+            [['weight', 'price'], 'number'],
         ];
     }
 
@@ -61,8 +62,8 @@ class ParcelSearch extends Parcel
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'DATE(created_at)' => $this->created_at,
+            'DATE(updated_at)' => $this->updated_at,
             'weight' => $this->weight,
             'size' => $this->size,
             'category_id' => $this->category_id,

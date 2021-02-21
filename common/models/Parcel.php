@@ -3,6 +3,7 @@
 namespace common\models;
 
 use backend\models\Category;
+use Yii;
 
 /**
  * This is the model class for table "parcel".
@@ -39,11 +40,12 @@ class Parcel extends \yii\db\ActiveRecord
         return 'parcel';
     }
 
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
        if($insert){
            $this->created_at = date('Y-m-d H:i:s');
            $this->updated_at = date('Y-m-d H:i:s');
+           $this->user_id = Yii::$app->user->getId();
        }
 
        return true;
@@ -57,7 +59,7 @@ class Parcel extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at'], 'safe'],
             [['weight', 'price'], 'number'],
-            [['category_id', 'user_id', 'recipient_id'], 'required'],
+            [['category_id', 'recipient_id'], 'required'],
             [['category_id', 'user_id'], 'integer'],
             [['status', 'size'], 'string'],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(),
@@ -116,5 +118,10 @@ class Parcel extends \yii\db\ActiveRecord
     public function getUserRecipient(): \yii\db\ActiveQuery
     {
         return $this->hasOne(User::className(), ['id' => 'recipient_id']);
+    }
+
+    public function formName()
+    {
+        return '';
     }
 }

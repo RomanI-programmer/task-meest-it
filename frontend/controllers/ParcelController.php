@@ -88,9 +88,7 @@ class ParcelController extends Controller
     public function actionCreate()
     {
         $model = new Parcel();
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
-            $model->user_id = Yii::$app->user->getId();
-            $model->save();
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->save()) {
             $searchModel = new ParcelSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

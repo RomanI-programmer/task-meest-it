@@ -41,6 +41,7 @@ class m210219_100937_create_parcel_table extends Migration
             'category_id',
             'category',
             'id',
+            'SET NULL',
         );
 
         // Creates index for column `user_id`
@@ -57,6 +58,7 @@ class m210219_100937_create_parcel_table extends Migration
             'user_id',
             'user',
             'id',
+            'SET NULL',
         );
     }
 

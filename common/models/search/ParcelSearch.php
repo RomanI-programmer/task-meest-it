@@ -19,8 +19,9 @@ class ParcelSearch extends Parcel
     {
         return [
             [['id', 'category_id', 'user_id'], 'integer'],
-            [['created_at', 'updated_at', 'status', 'recipient_id'], 'safe'],
-            [['weight', 'size', 'price'], 'number'],
+            [['created_at', 'updated_at', 'status'], 'safe'],
+            [['size'],'string'],
+            [['weight', 'price'], 'number'],
         ];
     }
 
@@ -62,14 +63,18 @@ class ParcelSearch extends Parcel
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'DATE(created_at)' => $this->created_at,
+            'DATE(updated_at)' => $this->updated_at,
             'weight' => $this->weight,
             'size' => $this->size,
             'category_id' => $this->category_id,
             'price' => $this->price,
-            'user_id' => Yii::$app->user->getId(),
-            'recipient_id' => $this->recipient_id,
+        ]);
+
+        $query->andWhere([
+            'or',
+            ['user_id' => empty($this->user_id) ? Yii::$app->user->getId() : $this->user_id],
+            ['recipient_id' => Yii::$app->user->getId()],
         ]);
 
         $query->andFilterWhere(['like', 'status', $this->status]);

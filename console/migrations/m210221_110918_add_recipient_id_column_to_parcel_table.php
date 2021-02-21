@@ -27,7 +27,8 @@ class m210221_110918_add_recipient_id_column_to_parcel_table extends Migration
         'parcel',
         'recipient_id',
         'user',
-        'id',
+    'id',
+        'SET NULL',
         );
     }
 

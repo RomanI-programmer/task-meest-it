@@ -30,15 +30,21 @@ use yii\bootstrap\Html;
 
 <div>
     <?= Html::label('Sender:') ?>
-    <?= $parcel->user->last_name && $parcel->user->first_name ? $parcel->user->first_name
-        . ' '. $parcel->user->last_name : 'Not set'
+    <?php
+    if($parcel->user){
+        echo $parcel->user->last_name && $parcel->user->first_name ? $parcel->user->first_name
+            . ' '. $parcel->user->last_name : 'Not set';
+    }
     ?>
 </div>
 
 <div>
     <?= Html::label('Recipient:') ?>
-    <?= $parcel->userRecipient->last_name && $parcel->userRecipient->first_name ? $parcel->userRecipient->first_name
-        . ' '. $parcel->userRecipient->last_name : 'Not set'
+    <?php
+    if($parcel->userRecipient){
+        echo $parcel->userRecipient->last_name && $parcel->userRecipient->first_name ? $parcel->userRecipient->first_name
+            . ' '. $parcel->userRecipient->last_name : 'Not set';
+    }
     ?>
 </div>
 

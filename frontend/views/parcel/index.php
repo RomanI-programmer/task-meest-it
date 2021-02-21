@@ -3,6 +3,7 @@
 use backend\models\Category;
 use common\models\Parcel;
 use common\models\User;
+use kartik\date\DatePicker;
 use yii\bootstrap\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -65,6 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::begin([
         'id' => 'pjax-grid-parcel',
+        'timeout' => false,
+        'enablePushState' => false,
     ]); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -74,7 +77,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'created_at',
+            [
+                'attribute' => 'created_at',
+                'value' => function($data){
+                    return $data->created_at;
+                },
+                'filter' => DatePicker::widget([
+                    'name' => 'created_at',
+                    'type' => DatePicker::TYPE_COMPONENT_PREPEND,
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ]),
+            ],
             'weight',
             'size',
             [
@@ -87,6 +103,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Category::getCategories(),
             ],
             'price',
+            [
+                'attribute' => 'user_id',
+                'value' => function($data){
+                    $recipient = $data->user;
+
+                    return $recipient ? $recipient->first_name . ' ' . $recipient->last_name : 'Not set';
+                },
+                'filter' => User::getUsersList(),
+            ],
             [
                 'attribute' => 'status',
                 'value' => function($data){
@@ -101,7 +126,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     return $recipient ? $recipient->first_name . ' ' . $recipient->last_name : 'Not set';
                 },
-                'filter' => User::getUsersList(),
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

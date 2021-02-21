@@ -20,7 +20,7 @@ class AdministratorController extends Controller
     public function actionNewAdmin()
     {
         $email = BaseConsole::input("Enter email: ");
-        $password = BaseConsole::input("Enter password");
+        $password = BaseConsole::input("Enter password: ");
         try {
             if (empty($password) || empty($email)) {
                 throw new \Exception('Data is empty');

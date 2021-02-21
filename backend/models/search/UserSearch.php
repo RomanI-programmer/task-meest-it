@@ -77,8 +77,8 @@ class UserSearch extends User
         $query->andFilterWhere(
             [
                 'id' => $this->id,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
+                'DATE(created_at)' => $this->created_at,
+                'DATE(updated_at)' => $this->updated_at,
             ]
         );
 

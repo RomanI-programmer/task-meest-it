@@ -52,15 +52,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function beforeSave($insert): bool
     {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->created_at = date('Y-m-d H:i:s');
-            }
-
-            return true;
-        } else {
-            return false;
+        if ($insert) {
+            $this->created_at = date('Y-m-d H:i:s');
+            $this->updated_at = date('Y-m-d H:i:s');
         }
+
+        return true;
     }
 
     /**
@@ -344,5 +341,10 @@ class User extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map(User::find()->all(),'id', function ($data) {
             return $data->first_name . ' ' . $data->last_name;
         });
+    }
+
+    public function formName()
+    {
+        return '';
     }
 }

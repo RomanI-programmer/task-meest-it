@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use backend\models\Parcel;
 use backend\models\search\ParcelSearch;
-use Da\QrCode\Action\QrCodeAction;
 use xj\qrcode\QRcode;
 use xj\qrcode\widgets\Text;
 use Yii;
@@ -13,7 +12,6 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 /**
  * ParcelController implements the CRUD actions for Parcel model.
@@ -84,12 +82,9 @@ class ParcelController extends Controller
     public function actionCreate()
     {
         $model = new Parcel();
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
-            $model->user_id = Yii::$app->user->getId();
-            $model->save();
-            $searchModel = new ParcelSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $searchModel = new ParcelSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->renderAjax('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,

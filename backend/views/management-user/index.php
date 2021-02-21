@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= '' // Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -27,14 +27,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+//            'id',
             'created_at',
-            'updated_at',
+//            'updated_at',
             'last_name',
             'first_name',
             //'address',
-            //'number_phone',
-            //'email:email',
+            'number_phone',
+            'email:email',
             //'auth_key',
             //'password_hash',
             //'password_reset_token',

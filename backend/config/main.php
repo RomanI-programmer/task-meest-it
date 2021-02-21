@@ -11,10 +11,10 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
-    'homeUrl' => '/admin/site/login',
+    'homeUrl' => '/admin',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'defaultRoute' => 'main/default/index',
+//    'defaultRoute' => 'main/default/index',
     'bootstrap' => ['log'],
     'modules' => [],
     'components' => [
@@ -30,7 +30,6 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
-            'loginUrl' => ['/site/login'],
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -54,19 +53,8 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-//            'enableStrictParsing' => true,
             'rules' => []
         ],
-//        'urlManagerFrontend' => [
-//            'class' => UrlManager::class,
-//            'baseUrl' => '',
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//            'enableStrictParsing' => true,
-//            'rules' => [
-//                'email-confirm' => 'users/default/email-confirm'
-//            ]
-//        ]
     ],
     'params' => $params,
 ];

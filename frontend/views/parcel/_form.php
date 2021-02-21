@@ -1,6 +1,7 @@
 <?php
 
 use backend\models\Category;
+use common\models\Parcel;
 use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -13,7 +14,10 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="parcel-form">
-    <?php $form = ActiveForm::begin(['options' => ['data-pjax' => true]]); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'form-parcel',
+    ]);
+    ?>
 
     <?= $form->field($model, 'weight')->textInput(['maxlength' => true]) ?>
 
@@ -29,10 +33,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->dropDownList([ 'sent' => 'Sent', 'received' => 'Received', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'status')->dropDownList(Parcel::LIST_STATUSES, ['prompt' => '']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::button('Save', ['class' => 'btn btn-success', 'onclick' => 'sendFormParcel(jQuery(this))']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -41,17 +45,16 @@ use yii\widgets\ActiveForm;
 <?php
 $url = $model->isNewRecord ? Yii::$app->controller->action->id :  Yii::$app->controller->action->id . "?id=$model->id";
 $js = <<<JS
-$('form').on('submit',function(event) {
-  event.preventDefault();
+function sendFormParcel(This){
    $.ajax({
         type: 'POST',
         url: '$url',
-        data: $(this).serialize(),
+        data: $('#form-parcel').serialize(),
         success: function () {
             $('.modal').modal('hide');
-            $.pjax.reload({container:"#pjax-grid-parcel"});
+            $.pjax.reload({container:"#pjax-grid-parcel",timeout:5000});
         }
     });
-});
+}
 JS;
 $this->registerJs($js);

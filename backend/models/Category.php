@@ -25,6 +25,16 @@ class Category extends \yii\db\ActiveRecord
         return 'category';
     }
 
+    public function beforeSave($insert)
+    {
+        if($insert){
+            $this->created_at = date('Y-m-d H:i:s');
+            $this->updated_at = date('Y-m-d H:i:s');
+        }
+
+        return true;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -69,5 +79,10 @@ class Category extends \yii\db\ActiveRecord
     public static function getCategories(): array
     {
         return ArrayHelper::map(self::find()->all(),'id','name');
+    }
+
+    public function formName()
+    {
+        return '';
     }
 }

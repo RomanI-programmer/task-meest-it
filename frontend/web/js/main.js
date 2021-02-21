@@ -1,5 +1,6 @@
 function createParcel() {
     $.ajax({
+        type: "GET",
         url: "create",
         success: function (data) {
             $('#createParcelModal').html(data);

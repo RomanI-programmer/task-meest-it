@@ -3,6 +3,7 @@
 use backend\models\Category;
 use backend\models\Parcel;
 use backend\models\User;
+use kartik\date\DatePicker;
 use yii\bootstrap\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -81,7 +82,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
-                'created_at',
+                [
+                    'attribute' => 'created_at',
+                    'value' => function($data){
+                        return $data->created_at;
+                    },
+                    'filter' => DatePicker::widget([
+                       'name' => 'created_at',
+                       'type' => DatePicker::TYPE_COMPONENT_PREPEND,
+                       'pluginOptions' => [
+                           'autoclose' => true,
+                           'format' => 'yyyy-mm-dd'
+                       ]
+                   ]),
+                ],
                 'weight',
                 'size',
                 [
@@ -101,7 +115,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'filter' => Parcel::LIST_STATUSES,
                 ],
-                'user_id',
+                [
+                    'attribute' => 'user_id',
+                    'value' => function($data){
+                        $recipient = $data->user;
+
+                        return $recipient ? $recipient->first_name . ' ' . $recipient->last_name : 'Not set';
+                    },
+                    'filter' => User::getUsersList(),
+                ],
                 [
                     'attribute' => 'recipient_id',
                     'value' => function($data){
