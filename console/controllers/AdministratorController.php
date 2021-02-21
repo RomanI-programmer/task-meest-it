@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\User;
+use Yii;
 use yii\console\Controller;
 use yii\helpers\BaseConsole;
 
@@ -31,6 +32,10 @@ class AdministratorController extends Controller
             $user->generatePasswordResetToken();
             $user->generateEmailVerificationToken();
             if ($user->save()) {
+                // Set role admin
+                $auth = Yii::$app->authManager;
+                $role = $auth->getRole('admin');
+                $auth->assign($role, $user->id);
                 die('Administrator successful created!');
             } else {
                 throw new \Exception('Validation user error!');

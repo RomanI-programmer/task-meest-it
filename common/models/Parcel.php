@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use backend\models\Category;
+
 /**
  * This is the model class for table "parcel".
  *
@@ -14,6 +16,7 @@ namespace common\models;
  * @property float|null $price
  * @property string|null $status
  * @property int $user_id
+ * @property int $recipient_id
  *
  * @property Category $category
  * @property User $user
@@ -21,8 +24,12 @@ namespace common\models;
 class Parcel extends \yii\db\ActiveRecord
 {
 
-    const STATUS_SENT = 'send';
+    const STATUS_SENT = 'sent';
     const STATUS_RECEIVED = 'received';
+    const LIST_STATUSES = [
+        'sent' => 'Sent',
+        'received' => 'Received',
+    ];
 
     /**
      * {@inheritdoc}
@@ -50,11 +57,15 @@ class Parcel extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at'], 'safe'],
             [['weight', 'price'], 'number'],
-            [['category_id', 'user_id'], 'required'],
+            [['category_id', 'user_id', 'recipient_id'], 'required'],
             [['category_id', 'user_id'], 'integer'],
             [['status', 'size'], 'string'],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(),
+                'targetAttribute' => ['category_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(),
+                'targetAttribute' => ['user_id' => 'id']],
+            [['recipient_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(),
+                'targetAttribute' => ['recipient_id' => 'id']],
         ];
     }
 
@@ -65,14 +76,15 @@ class Parcel extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => 'Created',
+            'updated_at' => 'Updated',
             'weight' => 'Weight',
             'size' => 'Size',
-            'category_id' => 'Category ID',
+            'category_id' => 'Category',
             'price' => 'Price',
             'status' => 'Status',
-            'user_id' => 'User ID',
+            'user_id' => 'Sender User',
+            'recipient_id' => 'Recipient',
         ];
     }
 
@@ -94,5 +106,15 @@ class Parcel extends \yii\db\ActiveRecord
     public function getUser(): \yii\db\ActiveQuery
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserRecipient(): \yii\db\ActiveQuery
+    {
+        return $this->hasOne(User::className(), ['id' => 'recipient_id']);
     }
 }

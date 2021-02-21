@@ -1,20 +1,19 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\User;
+use common\models\LoginForm;
+use frontend\models\ContactForm;
+use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResendVerificationEmailForm;
+use frontend\models\ResetPasswordForm;
+use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 
 /**
  * Site controller
@@ -22,6 +21,7 @@ use frontend\models\ContactForm;
 class SiteController extends Controller
 {
     public $layout = '@frontend/views/layouts-login/main';
+
     /**
      * {@inheritdoc}
      */
@@ -94,6 +94,9 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             if(Yii::$app->user->can('client')){
                 return $this->redirect(['parcel/index']);
+            }
+            if(Yii::$app->user->can('admin')){
+                return $this->redirect(['/admin/management-user/index']);
             }
 
             return $this->goBack();

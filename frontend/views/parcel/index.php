@@ -1,10 +1,11 @@
 <?php
 
+use backend\models\Category;
 use common\models\Parcel;
+use common\models\User;
 use yii\bootstrap\Modal;
-use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -73,20 +74,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-//            'id',
             'created_at',
-//            'updated_at',
             'weight',
             'size',
-            'category_id',
-            'price',
-            'status',
-            //'user_id',
+            [
+                'attribute' => 'category_id',
+                'value' => function($data){
+                    $category = $data->category;
 
+                    return $category ? $category->name : 'Not set';
+                },
+                'filter' => Category::getCategories(),
+            ],
+            'price',
+            [
+                'attribute' => 'status',
+                'value' => function($data){
+                    return $data->status;
+                },
+                'filter' => Parcel::LIST_STATUSES,
+            ],
+            [
+                'attribute' => 'recipient_id',
+                'value' => function($data){
+                    $recipient = $data->userRecipient;
+
+                    return $recipient ? $recipient->first_name . ' ' . $recipient->last_name : 'Not set';
+                },
+                'filter' => User::getUsersList(),
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'options'=>['class'=>'action-column'],
-                'template'=>'{view}{update}{delete}',
+                'template'=>'{view}{update}{print-declaration}{delete}',
                 'buttons'=>[
                     'view' => function($url,$model,$key){
                         return Html::button("<span class='glyphicon glyphicon-eye-open'></span>", [
@@ -99,6 +119,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => 'Update',
                             'onclick' => "updateParcel('{$key}')"
                         ]);
+                    },
+                    'print-declaration' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-print"></span>',
+                            $url,
+                            [
+                                'title' => 'Print Declaration',
+                            ]
+                        );
                     },
                     'delete' => function($url,$model,$key){
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [

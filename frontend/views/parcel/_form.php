@@ -1,6 +1,7 @@
 <?php
 
-use common\models\Category;
+use backend\models\Category;
+use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -20,6 +21,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(),[
         'prompt' => '---Select category---',
+    ]) ?>
+
+    <?= $form->field($model, 'recipient_id')->dropDownList(User::getUsersList(),[
+        'prompt' => '--- Select recipient user ---',
     ]) ?>
 
     <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>

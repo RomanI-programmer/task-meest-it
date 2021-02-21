@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -332,5 +333,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function getParcels(): \yii\db\ActiveQuery
     {
         return $this->hasMany(Parcel::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Method get all users
+     * @return array
+     */
+    public static function getUsersList(): array
+    {
+        return ArrayHelper::map(User::find()->all(),'id', function ($data) {
+            return $data->first_name . ' ' . $data->last_name;
+        });
     }
 }

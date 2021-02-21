@@ -2,6 +2,7 @@
 
 namespace common\models\search;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Parcel;
@@ -18,7 +19,7 @@ class ParcelSearch extends Parcel
     {
         return [
             [['id', 'category_id', 'user_id'], 'integer'],
-            [['created_at', 'updated_at', 'status'], 'safe'],
+            [['created_at', 'updated_at', 'status', 'recipient_id'], 'safe'],
             [['weight', 'size', 'price'], 'number'],
         ];
     }
@@ -47,7 +48,7 @@ class ParcelSearch extends Parcel
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['created_at' => SORT_DESC]],
+            'sort' => ['defaultOrder' => ['created_at' => SORT_DESC]],
         ]);
 
         $this->load($params);
@@ -67,7 +68,8 @@ class ParcelSearch extends Parcel
             'size' => $this->size,
             'category_id' => $this->category_id,
             'price' => $this->price,
-            'user_id' => $this->user_id,
+            'user_id' => Yii::$app->user->getId(),
+            'recipient_id' => $this->recipient_id,
         ]);
 
         $query->andFilterWhere(['like', 'status', $this->status]);

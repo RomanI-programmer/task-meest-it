@@ -1,4 +1,7 @@
 <?php
+
+use yii\web\UrlManager;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -8,9 +11,10 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
-    'homeUrl' => '/admin',
+    'homeUrl' => '/admin/site/login',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
+    'defaultRoute' => 'main/default/index',
     'bootstrap' => ['log'],
     'modules' => [],
     'components' => [
@@ -18,10 +22,15 @@ return [
             'csrfParam' => '_csrf-backend',
             'baseUrl' => '/admin',
         ],
+        'qr' => [
+            'class' => '\Da\QrCode\Component\QrCodeComponent',
+            // ... you can configure more properties of the component here
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'loginUrl' => ['/site/login'],
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -45,9 +54,19 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+//            'enableStrictParsing' => true,
+            'rules' => []
         ],
+//        'urlManagerFrontend' => [
+//            'class' => UrlManager::class,
+//            'baseUrl' => '',
+//            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+//            'enableStrictParsing' => true,
+//            'rules' => [
+//                'email-confirm' => 'users/default/email-confirm'
+//            ]
+//        ]
     ],
     'params' => $params,
 ];

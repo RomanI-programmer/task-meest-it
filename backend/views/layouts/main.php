@@ -1,80 +1,89 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use hosannahighertech\lbootstrap\widgets\NavBar;
+use hosannahighertech\lbootstrap\widgets\SideBar;
+use yii\helpers\Html;
 
 AppAsset::register($this);
 ?>
-<?php $this->beginPage() ?>
+<?php
+$this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
+    <?php
+    $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+    <?php
+    $this->head() ?>
 </head>
 <body>
-<?php $this->beginBody() ?>
+<?php
+$this->beginBody() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
-    ?>
+<div class="wrapper">
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <?= SideBar::widget(
+        [
+            //'bgImage' => '@web/img/sidebar-5.jpg', //Don't define it if there is none
+            'header' => [
+                'title' => 'Meest IT',
+                'url' => ['/default/index']
+            ],
+            'links' => [
+                ['title' => 'Users', 'url' => ['/management-user/index'], 'icon' => 'users'],
+                ['title' => 'Parcel', 'url' => ['/parcel/index'], 'icon' => 'box1'],
+                ['title' => 'Categories', 'url' => ['/category/index'], 'icon' => 'menu'],
+                [
+                    'title' => 'Log Out',
+                    'url' => ['/site/logout'],
+                    'icon' => 'door-lock',
+                    'options' => ['data' => ['method' => 'post']]
+                ],
+            ]
+        ]
+    ) ?>
+
+    <div class="main-panel">
+        <?= NavBar::widget(
+            [
+                'theme' => 'red',
+                'brand' => [
+                    'label' => ''
+                ],
+                'links' => [
+                    ['label' => 'Welcome, ' . Yii::$app->user->identity->email],
+//                    ['label' => 'About', 'url' => ['/site/about']],
+                ],
+            ]
+        ) ?>
+
+        <div class="content">
+            <div class="container-fluid">
+                <?= Alert::widget() ?>
+                <?= $content ?>
+            </div>
+        </div>
+
+        <footer class="footer">
+
+        </footer>
+
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
-
-<?php $this->endBody() ?>
+<?php
+$this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage() ?>
+<?php
+$this->endPage() ?>

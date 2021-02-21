@@ -1,4 +1,7 @@
 <?php
+
+use yii\web\UrlManager;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -10,6 +13,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'homeUrl' => '/',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
@@ -43,9 +47,17 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+//            'enableStrictParsing' => true,
+            'rules' => []
         ],
+//        'urlManagerBackend' => [
+//            'class' => UrlManager::class,
+//            'baseUrl' => '/admin',
+//            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+//            'enableStrictParsing' => true,
+//            'rules' => []
+//        ]
     ],
     'params' => $params,
 ];

@@ -4,9 +4,12 @@ namespace frontend\controllers;
 
 use common\models\Parcel;
 use common\models\search\ParcelSearch;
+use xj\qrcode\QRcode;
+use xj\qrcode\widgets\Text;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -27,8 +30,8 @@ class ParcelController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['client'],
-                        'denyCallback' => function($rule, $action) {
-                           Yii::$app->session->setFlash('error','Sorry, access denied :(');
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->session->setFlash('error', 'Sorry, access denied :(');
                         }
                     ],
                 ],
@@ -51,10 +54,13 @@ class ParcelController extends Controller
         $searchModel = new ParcelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render(
+            'index',
+            [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]
+        );
     }
 
     /**
@@ -65,9 +71,12 @@ class ParcelController extends Controller
      */
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
-        ]);
+        return $this->renderAjax(
+            'view',
+            [
+                'model' => $this->findModel($id),
+            ]
+        );
     }
 
     /**
@@ -85,15 +94,21 @@ class ParcelController extends Controller
             $searchModel = new ParcelSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-            return $this->renderAjax('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+            return $this->renderAjax(
+                'index',
+                [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]
+            );
         }
 
-        return $this->renderAjax('create', [
-            'model' => $model,
-        ]);
+        return $this->renderAjax(
+            'create',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -110,15 +125,21 @@ class ParcelController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->renderAjax('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+            return $this->renderAjax(
+                'index',
+                [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]
+            );
         }
 
-        return $this->renderAjax('update', [
-            'model' => $model,
-        ]);
+        return $this->renderAjax(
+            'update',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -130,25 +151,50 @@ class ParcelController extends Controller
      */
     public function actionDelete($id)
     {
-
         $model = $this->findModel($id);
-        if($model->status == Parcel::STATUS_SENT || $model->status == Parcel::STATUS_RECEIVED){
-            Yii::$app->session->setFlash('warning','Delete is not possible because it has already been sent');
+        if ($model->status == Parcel::STATUS_SENT || $model->status == Parcel::STATUS_RECEIVED) {
+            Yii::$app->session->setFlash('warning', 'Delete is not possible because it has already been sent');
 
             return $this->redirect(['index']);
         }
         $model->delete();
         $searchModel = new ParcelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        if (Yii::$app->request->isAjax){
-            return $this->renderAjax('index',[
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        }
-        else{
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax(
+                'index',
+                [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]
+            );
+        } else {
             return $this->redirect(['index']);
         }
+    }
+
+    /**
+     * @param $id
+     * @return string
+     * @throws \Exception
+     */
+    public function actionPrintDeclaration($id)
+    {
+        $parcel = $this->findModel($id);
+        $qr = Text::widget(
+            [
+                'outputDir' => "@webroot/upload/qrcode",
+                'outputDirWeb' => "@web/upload/qrcode",
+                'ecLevel' => QRcode::QR_ECLEVEL_L,
+                'text' => Url::to(['parcel/view', 'id' => $id], true),
+                'size' => 6,
+            ]
+        );
+
+        return $this->render('print-declaration', [
+            'qr' => $qr,
+            'parcel' => $parcel,
+        ]);
     }
 
     /**
