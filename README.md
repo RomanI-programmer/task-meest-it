@@ -1,3 +1,18 @@
+Steps for run project:
+<p>1) After the project is deployed, run migrations:</p>
+<ul>
+    <li>"yii migrate"</li>
+    <li>"yii migrate --migrationPath=@yii/rbac/migrations"</li> 
+</ul>
+<p>
+2) Add rules with console command: "yii rbac/init" - This command created role 'admin' and 'client'
+</p>
+<p>
+3) Add administrator with console command: "yii administrator/new-admin"
+</p>
+
+
+
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
